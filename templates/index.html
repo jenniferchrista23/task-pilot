@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Pilot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .sortable-ghost {
+            opacity: 0.4;
+        }
+
+        .sortable-chosen {
+            background-color: #f0f0f0;
+        }
+
+        .to-be-done {
+            color: red;
+        }
+
+        .navbar-custom {
+            background-color: #004080; /* Dark blue color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-custom .navbar-brand {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem; /* Increase font size */
+            font-weight: bold; /* Make it bold */
+        }
+
+        .card-header {
+            background-color: #66a4e768;
+            color: #333333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+        from {
+           opacity: 0;
+        }
+        to {
+           opacity: 1;
+        }
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-actions {
+            display: flex;
+        }
+
+        .item-actions form {
+            display: inline-flex;
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .btn-success,
+        .btn-danger {
+            margin-left: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-custom navbar-expand-lg">
+        <a class="navbar-brand" href="#">Task Pilot</a>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between mb-4">
+            <form action="/add_app" method="POST" class="form-inline">
+                <div class="form-group">
+                    <input type="text" name="app_name" class="form-control" placeholder="Enter application name" required>
+                </div>
+                <button type="submit" class="btn btn-primary ml-2">Add Application</button>
+            </form>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-warning">
+            {% for category, message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="form-group">
+            <label for="appSelect">Select Application:</label>
+            <select id="appSelect" class="form-control">
+                <option value="">Select an application</option>
+                {% for app in apps %}
+                <option value="{{ app.id }}">{{ app.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="row">
+            {% for app in apps %}
+            <div class="col-md-12 mb-4 app-card hidden" id="app-card-{{ app.id }}">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>{{ app.name }}</span>
+                        <form action="/delete_app/{{ app.id }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Delete Application</button>
+                        </form>
+                        <!-- Add a refresh button -->
+                        <!-- <button id="refreshButton" class="btn btn-primary">Refresh</button> -->
+                    </div>
+                    <div class="card-body">
+                        <!-- <button class="btn btn-info refresh-btn">Refresh</button> -->
+                        <div class="d-flex justify-content-between mb-4">
+                            <div>
+                                <a href="/download_csv/{{ app.id }}" class="btn btn-primary ml-2">Download CSV</a>
+                                <a href="/download_pdf/{{ app.id }}" class="btn btn-primary ml-2">Download PDF</a>                                
+                            </div>
+                            <!-- <form action="/refresh_app/{{ app.id }}" method="GET">
+                                <button type="submit" class="btn btn-primary">Refresh</button>
+                            </form> -->
+                            <form action="/upload_csv/{{ app.id }}" method="POST" enctype="multipart/form-data" class="form-inline">
+                                <div class="form-group">
+                                    <input type="file" name="file" class="form-control-file" accept=".csv" required>
+                                </div>
+                                <button type="submit" class="btn btn-secondary ml-2">Import CSV</button>
+                            </form>
+                            
+                        </div>
+                        <form action="/add" method="POST" class="mb-3">
+                            <div class="input-group">
+                                <input type="hidden" name="app_id" value="{{ app.id }}">
+                                <input type="text" name="item" class="form-control" placeholder="Add new task" required>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-success">Add Task</button>
+                                </div>
+                            </div>
+                        </form>
+                        <ul id="taskList-{{ app.id }}" class="list-group list-group-flush">
+                            {% for item in app.items %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ item.id }}">
+                                <span class="item-text {% if item.status == 'to be done' %}to-be-done{% endif %}">{{ item.item }}</span>
+                                <div class="item-actions">
+                                    <form action="/update/{{ item.id }}" method="POST" class="mr-2">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="text" name="new_item" class="form-control mr-2" placeholder="Edit task">
+                                        <select name="status" class="form-control mr-2">
+                                            <option value="to be done" {{ 'selected' if item.status == 'to be done' else '' }}>To be done</option>
+                                            <option value="done" {{ 'selected' if item.status == 'done' else '' }}>Done</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+                                    <form action="/update/{{ item.id }}" method="POST">
+                                        <input type="hidden" name="action" value="delete">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const appSelect = document.getElementById('appSelect');
+    if (appSelect) {
+        appSelect.addEventListener('change', (event) => {
+            const selectedAppId = event.target.value;
+            toggleAppCardVisibility(selectedAppId);
+        });
+        // Check if there's a stored ID in local storage
+        const storedAppId = localStorage.getItem('selectedAppId');
+        if (storedAppId) {
+            // Open the previously selected application card
+            toggleAppCardVisibility(storedAppId);
+            // Set the selected option in the select element
+            appSelect.value = storedAppId;
+        }
+        // Add event listener to store the selected application card ID
+        appSelect.addEventListener('change', (event) => {
+            const selectedAppId = event.target.value;
+            // Store the selected ID in local storage
+            localStorage.setItem('selectedAppId', selectedAppId);
+            // Open the selected application card
+            toggleAppCardVisibility(selectedAppId);
+        });
+    }
+
+    // Function to toggle visibility of application card
+    function toggleAppCardVisibility(appId) {
+        document.querySelectorAll('.app-card').forEach(card => {
+            card.classList.add('hidden');
+        });
+        if (appId) {
+            const selectedCard = document.getElementById(`app-card-${appId}`);
+            if (selectedCard) {
+                selectedCard.classList.remove('hidden');
+            }
+        }
+    }
+
+    // Function to update the application card with new data
+    function updateAppCard(data) {
+        const taskList = document.getElementById(`taskList-${data.id}`);
+        if (taskList) {
+            // Clear current task list
+            taskList.innerHTML = '';
+            // Add updated tasks
+            data.items.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                listItem.setAttribute('data-id', item.id);
+                listItem.innerHTML = `
+                    <span class="item-text ${item.status === 'to be done' ? 'to-be-done' : ''}">${item.item}</span>
+                    <div class="item-actions">
+                        <form action="/update/${item.id}" method="POST" class="mr-2">
+                            <input type="hidden" name="action" value="update">
+                            <input type="text" name="new_item" class="form-control mr-2" placeholder="Edit task">
+                            <select name="status" class="form-control mr-2">
+                                <option value="to be done" ${item.status === 'to be done' ? 'selected' : ''}>To be done</option>
+                                <option value="done" ${item.status === 'done' ? 'selected' : ''}>Done</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                        <form action="/update/${item.id}" method="POST">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                `;
+                taskList.appendChild(listItem);
+            });
+        }
+    }
+
+    // Add event listener to the refresh button
+    // document.getElementById('refreshButton').addEventListener('click', function () {
+    //     // Reload the current page
+    //     location.reload();
+    // });
+
+    {% for app in apps %}
+            const taskList{{ app.id }} = document.getElementById('taskList-{{ app.id }}');
+            new Sortable(taskList{{ app.id }}, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                onEnd: function (evt) {
+                    const order = Array.from(taskList{{ app.id }}.children).map(item => item.getAttribute('data-id'));
+                    fetch('/update_order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ order: order }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                console.log('Order updated successfully');
+                            } else {
+                                console.error('Failed to update order');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                },
+            });
+            {% endfor %}
+});
+
+    </script>
+</body>
+
+</html>
