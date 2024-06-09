@@ -117,7 +117,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## Contact
 
-If you have any questions or need further assistance, please visit my [blog]([https://devops-learning-spot.blogspot.com/]) and leave a message. I'll be happy to help!
+If you have any questions or need further assistance, please visit my [blog](https://devops-learning-spot.blogspot.com/) and leave a message. I'll be happy to help!
 
 ---
 
