@@ -29,7 +29,7 @@ TaskPilot is a Python-based web application designed to help you manage your tas
     cd task-pilot
     ```
 
-3. **Install the required packages:**
+2. **Install the required packages:**
 
     ```bash
     pip install flask flask_sqlalchemy sqlalchemy pandas reportlab
@@ -38,13 +38,13 @@ TaskPilot is a Python-based web application designed to help you manage your tas
     pip install -r requirements.txt
     ```
 
-4. **Run the application:**
+3. **Run the application:**
 
     ```bash
     python app.py
     ```
 
-5. **Open your web browser and navigate to:**
+4. **Open your web browser and navigate to:**
 
     ```
     http://127.0.0.1:5000/
@@ -63,9 +63,15 @@ TaskPilot is a Python-based web application designed to help you manage your tas
     git clone https://github.com/jenniferchrista23/task-pilot.git
     cd task-pilot/dist/windows
     ```
-2. **Download `taskpilot.exe`** and save it to a convenient location on your computer.
+
+2. **Install the required packages:**
+
+    ```bash
+    pip install flask flask_sqlalchemy sqlalchemy pandas reportlab
+    
+3. **Download `taskpilot.exe`** and save it to a convenient location on your computer.
   
-3. **Double-click the executable** to run the application.
+4. **Double-click the executable** to run the application.
 
 ### Linux
 
@@ -75,15 +81,18 @@ TaskPilot is a Python-based web application designed to help you manage your tas
     git clone https://github.com/jenniferchrista23/task-pilot.git
     cd task-pilot/dist/linux
     ```
-    
-2. **Download `TaskPilot`** and save it to a convenient location on your computer.
-3. **Make the file executable** by running the following command in your terminal:
+2. **Install the required packages:**
+
+    ```bash
+    pip install flask flask_sqlalchemy sqlalchemy pandas reportlab   
+3. **Download `TaskPilot`** and save it to a convenient location on your computer.
+4. **Make the file executable** by running the following command in your terminal:
 
     ```bash
     chmod +x task-pilot/dist/linux/TaskPilot
     ```
 
-3. **Run the application** by executing:
+5. **Run the application** by executing:
 
     ```bash
     ./task-pilot/dist/linux/TaskPilot
@@ -97,15 +106,18 @@ TaskPilot is a Python-based web application designed to help you manage your tas
     git clone https://github.com/jenniferchrista23/task-pilot.git
     cd task-pilot/dist/macos
     ```
-    
-2. **Download `app`** and save it to a convenient location on your computer.
-3. **Make the file executable** by running the following command in your terminal:
+2. **Install the required packages:**
+
+    ```bash
+    pip install flask flask_sqlalchemy sqlalchemy pandas reportlab   
+3. **Download `app`** and save it to a convenient location on your computer.
+4. **Make the file executable** by running the following command in your terminal:
 
     ```bash
     chmod +x task-pilot/dist/macos/app
     ```
 
-3. **Run the application** by executing:
+5. **Run the application** by executing:
 
     ```bash
     ./task-pilot/dist/macos/app
