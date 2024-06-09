@@ -108,7 +108,7 @@ TaskPilot is a Python-based web application designed to help you manage your tas
 3. **Run the application** by executing:
 
     ```bash
-    ./path/to/taskpilot-macos/app
+    ./taskpilot/dist/macos/app
     ```
 
 ## Contributing
