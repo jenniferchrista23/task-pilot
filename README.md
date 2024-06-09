@@ -121,4 +121,4 @@ If you have any questions or need further assistance, please visit my [blog](htt
 
 ---
 
-Thank you for using TaskPilot! We hope it helps you manage your tasks more efficiently.
+Thank you for using TaskPilot! I hope it helps you manage your tasks more efficiently.
