@@ -26,7 +26,7 @@ TaskPilot is a Python-based web application designed to help you manage your tas
 
     ```bash
     git clone https://github.com/jenniferchrista23/task-pilot.git
-    cd taskpilot
+    cd task-pilot
     ```
 
 3. **Install the required packages:**
@@ -61,7 +61,7 @@ TaskPilot is a Python-based web application designed to help you manage your tas
    
     ```bash
     git clone https://github.com/jenniferchrista23/task-pilot.git
-    cd taskpilot/dist/windows
+    cd task-pilot/dist/windows
     ```
 2. **Download `taskpilot.exe`** and save it to a convenient location on your computer.
   
@@ -73,20 +73,20 @@ TaskPilot is a Python-based web application designed to help you manage your tas
    
     ```bash
     git clone https://github.com/jenniferchrista23/task-pilot.git
-    cd taskpilot/dist/linux
+    cd task-pilot/dist/linux
     ```
     
 2. **Download `TaskPilot`** and save it to a convenient location on your computer.
 3. **Make the file executable** by running the following command in your terminal:
 
     ```bash
-    chmod +x taskpilot/dist/linux/TaskPilot
+    chmod +x task-pilot/dist/linux/TaskPilot
     ```
 
 3. **Run the application** by executing:
 
     ```bash
-    ./taskpilot/dist/linux/TaskPilot
+    ./task-pilot/dist/linux/TaskPilot
     ```
 
 ### macOS
@@ -95,20 +95,20 @@ TaskPilot is a Python-based web application designed to help you manage your tas
    
     ```bash
     git clone https://github.com/jenniferchrista23/task-pilot.git
-    cd taskpilot/dist/macos
+    cd task-pilot/dist/macos
     ```
     
 2. **Download `app`** and save it to a convenient location on your computer.
 3. **Make the file executable** by running the following command in your terminal:
 
     ```bash
-    chmod +x taskpilot/dist/macos/app
+    chmod +x task-pilot/dist/macos/app
     ```
 
 3. **Run the application** by executing:
 
     ```bash
-    ./taskpilot/dist/macos/app
+    ./task-pilot/dist/macos/app
     ```
 
 ## Contributing
