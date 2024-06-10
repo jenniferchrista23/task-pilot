@@ -14,7 +14,7 @@ TaskPilot is a Python-based web application designed to help you manage your tas
 
 ## Requirements
 
-- Python 3.6+
+- Python 3.x+
 - Flask
 - Flask-SQLAlchemy
 - pandas
